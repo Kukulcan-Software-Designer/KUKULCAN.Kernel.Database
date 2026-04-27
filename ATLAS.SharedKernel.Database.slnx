@@ -1,0 +1,40 @@
+<Solution>
+  <!--
+    ATLAS.SharedKernel.Database
+    Librería de infraestructura de base de datos para ATLAS ERP.
+
+    Provee:
+      - AtlasDbContextBase        → base para todos los DbContext de módulo
+      - AddAtlasDbContext<T>()    → extensión DI que registra DbContext + IUnitOfWork + SlowQueryInterceptor
+      - UnitOfWork<TContext>      → implementación de IUnitOfWork
+      - 5 interceptores EF Core  → AuditSaveChanges, SoftDelete, DomainEventDispatch,
+                                    ImmutableEntity, SlowQuery
+      - ModelBuilderExtensions   → ApplySoftDeleteFilter, ApplyTenantFilter
+      - AtlasDatabaseOptions     → configuración multi-proveedor
+      - DatabaseProvider         → enum: SqlServer, PostgreSql, MySql, Oracle, Sqlite
+
+    Formato: .slnx (XML, .NET 9+ / Visual Studio 2022 17.12+)
+
+    Árbol de dependencias de la solución:
+      Atlas.SharedKernel.Abstractions
+              ↑
+      Atlas.SharedKernel.Domain
+              ↑
+      ATLAS.SharedKernel.Database     ← proyecto principal de esta solución
+  -->
+
+  <Folder Name="/Documentation/" />
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+
+  <Folder Name="/Source/">
+    <Project Path="Source/ATLAS.SharedKernel.Database/ATLAS.SharedKernel.Database.csproj" />
+  </Folder>
+
+  <Folder Name="/Tests/" />
+
+</Solution>

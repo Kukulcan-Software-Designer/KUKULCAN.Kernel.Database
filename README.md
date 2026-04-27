@@ -1,2 +1,139 @@
 # ATLAS.SharedKernel.Database
-ATLAS.SharedKernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
+
+## Overview
+
+`ATLAS.SharedKernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
+
+This project acts as part of the **Shared Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
+
+## Purpose
+
+The main goals of this library are:
+
+- Centralize common database logic
+- Provide reusable abstractions for persistence
+- Enforce consistency across modules
+- Reduce duplication in infrastructure code
+- Serve as a base layer for database integrations
+
+## Architecture Context
+
+This project is intended to be used within a **modular architecture** aligned with:
+
+- Domain-Driven Design (DDD)
+- Clean Architecture
+- CQRS (Command Query Responsibility Segregation)
+
+It typically sits in the **Shared Kernel layer**, meaning:
+
+- It is shared across multiple bounded contexts
+- It should remain stable and generic
+- It must avoid domain-specific logic
+
+## Project Structure
+
+```
+ATLAS.SharedKernel.Database/
+│
+├── Source/        # Main source code (currently empty or minimal)
+├── Tests/         # Unit and integration tests
+├── Documents/     # Supporting documentation
+├── Directory.Build.props
+└── Solution file
+```
+
+## Key Responsibilities
+
+Although the current implementation is minimal, this library is expected to include:
+
+- Database context base classes
+- Common Entity Framework configurations
+- Base repository patterns
+- Transaction management abstractions
+- Connection handling
+- Migration utilities (optional)
+- Cross-cutting persistence concerns
+
+## Expected Components
+
+Typical components that may be implemented:
+
+### 1. Base DbContext
+
+```csharp
+public abstract class AtlasDbContext : DbContext
+{
+    protected AtlasDbContext(DbContextOptions options) : base(options)
+    {
+    }
+}
+```
+
+### 2. Repository Abstractions
+
+```csharp
+public interface IRepository<T>
+{
+    Task<T?> GetByIdAsync(Guid id);
+    Task AddAsync(T entity);
+    void Update(T entity);
+    void Remove(T entity);
+}
+```
+
+### 3. Unit of Work
+
+```csharp
+public interface IUnitOfWork
+{
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+}
+```
+
+## Usage
+
+This library should be referenced by infrastructure layers of other modules:
+
+```bash
+dotnet add reference ATLAS.SharedKernel.Database
+```
+
+Example usage in a module:
+
+```csharp
+services.AddDbContext<MyModuleDbContext>(options =>
+{
+    options.UseSqlServer(configuration.GetConnectionString("Default"));
+});
+```
+
+## Design Principles
+
+- **Low coupling**: No dependency on specific business domains
+- **High cohesion**: Focus only on database concerns
+- **Extensibility**: Easy to extend in consuming modules
+- **Consistency**: Standard patterns across all modules
+
+## Guidelines
+
+- Do not include business logic
+- Avoid module-specific dependencies
+- Keep APIs stable and backward-compatible
+- Document all public abstractions
+
+## Future Improvements
+
+- Add base implementations for repositories
+- Introduce audit tracking (CreatedAt, UpdatedAt)
+- Soft delete support
+- Multi-tenancy support
+- Outbox pattern integration
+- Migration helpers
+
+## License
+
+This project is licensed under the terms defined in the `LICENSE` file.
+
+## Notes
+
+This library is currently in an early stage and may evolve as the Atlas ecosystem grows.
