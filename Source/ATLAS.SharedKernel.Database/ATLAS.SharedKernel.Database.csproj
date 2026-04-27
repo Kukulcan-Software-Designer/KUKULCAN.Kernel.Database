@@ -33,17 +33,6 @@
 	  <Copyright>Copyright © 2026 Potestaris Software</Copyright>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
   <!-- SharedKernel references — no circular deps -->
 
   <!-- EF Core core only — providers added per-module or per-host -->
