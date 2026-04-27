@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>preview</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>ATLAS.SharedKernel.Database</RootNamespace>
+    <AssemblyName>ATLAS.SharedKernel.Database</AssemblyName>
+    <Description>
+      ATLAS ERP SharedKernel — Database infrastructure.
+      Provides AtlasDbContextBase, multi-provider selection, EF Core interceptors
+      (audit, soft-delete, domain event dispatch, immutability, slow query),
+      global query filters (tenant isolation, soft-delete), UnitOfWork&lt;TContext&gt;,
+      and the AddAtlasDbContext&lt;T&gt;() DI extension.
+    </Description>
+    <PackageTags>atlas;erp;ddd;shared-kernel;database;efcore;infrastructure</PackageTags>
+    <Authors>Atlas ERP Team</Authors>
+    <Company>TITÁN Software</Company>
+    <Copyright>Copyright © 2026 TITÁN Software</Copyright>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- SharedKernel references — no circular deps -->
+
+  <!-- EF Core core only — providers added per-module or per-host -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore"             Version="10.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"  Version="10.*" />
+    <PackageReference Include="MediatR.Contracts"                         Version="2.*"  />
+    <PackageReference Include="Microsoft.Extensions.Options"              Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.*" />
+  </ItemGroup>
+
+  <!--
+    DATABASE PROVIDER packages are NOT referenced here.
+    Add them in each module's Infrastructure project or in the host application.
+
+    SQL Server  : Microsoft.EntityFrameworkCore.SqlServer
+    PostgreSQL  : Npgsql.EntityFrameworkCore.PostgreSQL
+    MySQL       : Pomelo.EntityFrameworkCore.MySql
+    Oracle      : Oracle.EntityFrameworkCore
+    SQLite (dev): Microsoft.EntityFrameworkCore.Sqlite
+  -->
+
+</Project>
