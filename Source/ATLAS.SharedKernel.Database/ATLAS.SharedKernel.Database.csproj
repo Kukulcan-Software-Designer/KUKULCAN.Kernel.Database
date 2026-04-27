@@ -18,19 +18,42 @@
     </Description>
     <PackageTags>atlas;erp;ddd;shared-kernel;database;efcore;infrastructure</PackageTags>
     <Authors>Atlas ERP Team</Authors>
-    <Company>TITÁN Software</Company>
-    <Copyright>Copyright © 2026 TITÁN Software</Copyright>
-    <Version>1.0.0</Version>
+    <Copyright>Copyright © 2026 Potestaris Software</Copyright>
+	<!-- Generar paquete NuGet automáticamente -->
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<!-- Solo generar en Release -->
+	<GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+	<!-- Metadatos del paquete -->
+	<PackageId>$(AssemblyName)</PackageId>
+	<Version>$(VersionPrefix)</Version>
+	<Authors>KRATOS Design Systems</Authors>
+	<Company>$(Authors)</Company>
+	<Description>ATLAS.SharedKernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.</Description>
+	<RepositoryUrl>https://github.com/Potestaris/ATLAS.SharedKernel.Database</RepositoryUrl>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <!-- SharedKernel references — no circular deps -->
 
   <!-- EF Core core only — providers added per-module or per-host -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore"             Version="10.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"  Version="10.*" />
-    <PackageReference Include="MediatR.Contracts"                         Version="2.*"  />
-    <PackageReference Include="Microsoft.Extensions.Options"              Version="10.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.*" />
+    <PackageReference Include="MediatR.Contracts" Version="2.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.*" />

@@ -2,7 +2,7 @@
 
 ## Overview
 
-`ATLAS.SharedKernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the Atlas ERP ecosystem.
+`ATLAS.SharedKernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
 
 This project acts as part of the **Shared Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
 
