@@ -130,9 +130,24 @@ services.AddDbContext<MyModuleDbContext>(options =>
 - Outbox pattern integration
 - Migration helpers
 
+## Requirements
+
+- **.NET 10**
+- MediatR 12.*
+- FluentValidation 11.*
+- Microsoft.Extensions.Logging.Abstractions 10.*
+
 ## License
 
-This project is licensed under the terms defined in the `LICENSE` file.
+This project is owned and maintained by **Kratos Software Design** and is distributed under the **General Public License (GPL)**.
+
+This means the software is free to use, modify, and redistribute, provided that:
+
+- The original copyright notice is preserved.
+- Proper attribution is given to the original creators.
+- Any derivative work distributed must remain under the same GPL license terms.
+
+For full license terms, see the `LICENSE` file included in this repository.
 
 ## Notes
 
