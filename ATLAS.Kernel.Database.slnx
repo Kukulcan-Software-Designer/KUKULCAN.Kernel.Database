@@ -31,6 +31,10 @@
     <File Path="nuget.config" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/delete-merged-branches.yml" />
+  </Folder>
 
   <Folder Name="/Source/">
     <Project Path="Source/ATLAS.Kernel.Database/ATLAS.Kernel.Database.csproj" />
