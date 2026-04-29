@@ -63,6 +63,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
     private readonly ICurrentUser _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     private readonly IDateTimeProvider _clock = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
     private readonly IPublisher _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
+    private const string CommandTimeoutMethodName = "CommandTimeout";
 
     // ── OnConfiguring — provider selection ────────────────────────────────────
 
@@ -140,10 +141,10 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
-                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<int>?)])
+                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<int>)])
                                 ?.Invoke(o, [maxRetry, maxDelay, null]);
                     })]);
         }
@@ -168,10 +169,10 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
-                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<string>?)])
+                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<string>)])
                                 ?.Invoke(o, [maxRetry, maxDelay, null]);
                     })]);
         }
@@ -201,7 +202,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     [typeof(DbContextOptionsBuilder), typeof(string), svType!, typeof(Action<object>)])
                 ?.Invoke(null, [optionsBuilder, connectionString, serverVersion,
                     (Action<object>)(o =>
-                        o.GetType().GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]))]);
+                        o.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
         }
         catch (Exception ex) when (ex is not NotSupportedException)
         {
@@ -222,7 +223,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
                 ?.Invoke(null, [optionsBuilder, connectionString,
                     (Action<object>)(o =>
-                        o.GetType().GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]))]);
+                        0.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
         }
         catch (Exception ex) when (ex is not NotSupportedException)
         {

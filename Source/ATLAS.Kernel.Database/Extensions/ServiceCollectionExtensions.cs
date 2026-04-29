@@ -1,7 +1,6 @@
 using ATLAS.Kernel.Database.Configuration;
 using ATLAS.Kernel.Database.Interceptors;
 using ATLAS.Kernel.Database.UnitOfWork;
-using ATLAS.Kernel.Primitives.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
