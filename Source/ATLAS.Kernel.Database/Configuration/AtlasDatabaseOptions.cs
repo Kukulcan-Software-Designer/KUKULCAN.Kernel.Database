@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Configuration;
+namespace ATLAS.Kernel.Database.Configuration;
 
 /// <summary>
 /// Strongly-typed configuration options for ATLAS database connections.

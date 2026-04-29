@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ATLAS.SharedKernel.Database.Configuration;
+using ATLAS.Kernel.Database.Configuration;
+using System.Data.Common;
 
-namespace ATLAS.SharedKernel.Database.Interceptors;
+namespace ATLAS.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="DbCommandInterceptor"/> that logs a warning whenever a
@@ -29,7 +30,8 @@ namespace ATLAS.SharedKernel.Database.Interceptors;
 /// // [SlowQuery] 823ms exceeded threshold (500ms). SQL: SELECT ...
 /// </code>
 /// </example>
-public sealed class SlowQueryInterceptor : DbCommandInterceptor
+/// <remarks>Initialises the interceptor with the required services.</remarks>
+public sealed class SlowQueryInterceptor(Logger<SlowQueryInterceptor> logger, IOptions<AtlasDatabaseOptions> options) : DbCommandInterceptor
 {
     /// <summary>
     /// Commands taking longer than this value (milliseconds) are logged as warnings.
@@ -37,34 +39,20 @@ public sealed class SlowQueryInterceptor : DbCommandInterceptor
     /// </summary>
     public static int SlowQueryThresholdMs { get; set; } = 500;
 
-    private readonly ILogger<SlowQueryInterceptor> _logger;
-    private readonly AtlasDatabaseOptions          _options;
-
-    /// <summary>Initialises the interceptor with the required services.</summary>
-    public SlowQueryInterceptor(
-        ILogger<SlowQueryInterceptor>    logger,
-        IOptions<AtlasDatabaseOptions>   options)
-    {
-        _logger  = logger;
-        _options = options.Value;
-    }
+    private readonly ILogger<SlowQueryInterceptor> _logger = logger;
+    private readonly AtlasDatabaseOptions _options = options.Value;
 
     /// <inheritdoc/>
-    public override System.Data.Common.DbDataReader ReaderExecuted(
-        System.Data.Common.DbCommand command,
-        CommandExecutedEventData     eventData,
-        System.Data.Common.DbDataReader result)
+    public override System.Data.Common.DbDataReader ReaderExecuted(DbCommand command, 
+        CommandExecutedEventData eventData, DbDataReader result)
     {
         LogIfSlow(command, eventData.Duration);
         return base.ReaderExecuted(command, eventData, result);
     }
 
     /// <inheritdoc/>
-    public override ValueTask<System.Data.Common.DbDataReader> ReaderExecutedAsync(
-        System.Data.Common.DbCommand    command,
-        CommandExecutedEventData        eventData,
-        System.Data.Common.DbDataReader result,
-        CancellationToken               cancellationToken = default)
+    public override ValueTask<System.Data.Common.DbDataReader> ReaderExecutedAsync(DbCommand command,
+        CommandExecutedEventData eventData, DbDataReader result, CancellationToken cancellationToken = default)
     {
         LogIfSlow(command, eventData.Duration);
         return base.ReaderExecutedAsync(command, eventData, result, cancellationToken);

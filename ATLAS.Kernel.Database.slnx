@@ -1,6 +1,6 @@
 <Solution>
   <!--
-    ATLAS.SharedKernel.Database
+    ATLAS.Kernel.Database
     Librería de infraestructura de base de datos para ATLAS ERP.
 
     Provee:
@@ -16,11 +16,11 @@
     Formato: .slnx (XML, .NET 9+ / Visual Studio 2022 17.12+)
 
     Árbol de dependencias de la solución:
-      Atlas.SharedKernel.Abstractions
+      Atlas.Kernel.Abstractions
               ↑
-      Atlas.SharedKernel.Domain
+      Atlas.Kernel.Domain
               ↑
-      ATLAS.SharedKernel.Database     ← proyecto principal de esta solución
+      ATLAS.Kernel.Database     ← proyecto principal de esta solución
   -->
 
   <Folder Name="/Documentation/" />
@@ -32,7 +32,7 @@
   </Folder>
 
   <Folder Name="/Source/">
-    <Project Path="Source/ATLAS.SharedKernel.Database/ATLAS.SharedKernel.Database.csproj" />
+    <Project Path="Source/ATLAS.Kernel.Database/ATLAS.Kernel.Database.csproj" />
   </Folder>
 
   <Folder Name="/Tests/" />

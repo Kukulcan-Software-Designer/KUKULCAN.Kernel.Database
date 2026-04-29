@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Interceptors;
+namespace ATLAS.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that automatically populates audit
@@ -15,21 +15,12 @@ namespace ATLAS.SharedKernel.Database.Interceptors;
 /// falls back to <c>"system"</c>.
 /// </para>
 /// </remarks>
-public sealed class AuditSaveChangesInterceptor : SaveChangesInterceptor
+/// <remarks>Initialises the interceptor with the required services.</remarks>
+public sealed class AuditSaveChangesInterceptor(ICurrentUser currentUser, IDateTimeProvider clock) : SaveChangesInterceptor
 {
-    private readonly ICurrentUser      _currentUser;
-    private readonly IDateTimeProvider _clock;
-
-    /// <summary>Initialises the interceptor with the required services.</summary>
-    public AuditSaveChangesInterceptor(ICurrentUser currentUser, IDateTimeProvider clock)
-    {
-        _currentUser = currentUser;
-        _clock       = clock;
-    }
 
     /// <inheritdoc/>
-    public override InterceptionResult<int> SavingChanges(
-        DbContextEventData      eventData,
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData,
         InterceptionResult<int> result)
     {
         UpdateAuditFields(eventData.Context);
@@ -37,10 +28,8 @@ public sealed class AuditSaveChangesInterceptor : SaveChangesInterceptor
     }
 
     /// <inheritdoc/>
-    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
-        DbContextEventData      eventData,
-        InterceptionResult<int> result,
-        CancellationToken       cancellationToken = default)
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+        InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         UpdateAuditFields(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -52,8 +41,8 @@ public sealed class AuditSaveChangesInterceptor : SaveChangesInterceptor
     {
         if (context is null) return;
 
-        var now  = _clock.UtcNow;
-        var user = _currentUser.IsAuthenticated ? _currentUser.UserName : "system";
+        var now  = clock.UtcNow;
+        var user = currentUser.IsAuthenticated ? currentUser.UserName : "system";
 
         foreach (var entry in context.ChangeTracker.Entries<AuditableEntityBase<Guid>>())
         {

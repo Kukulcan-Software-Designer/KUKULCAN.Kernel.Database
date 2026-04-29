@@ -1,0 +1,27 @@
+<Project>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+        <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+        <PackageId>$(AssemblyName)</PackageId>
+        <Version>$(VersionPrefix)</Version>
+        <Authors>KRATOS Design Systems</Authors>
+        <Company>KRATOS Design Systems</Company>
+        <Copyright>GPL 2026 Kratos Software Design</Copyright>
+        <PackageProjectUrl>https://www.kratos.com/ATLAS</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageOutputPath>$(SolutionDir)NuGet\</PackageOutputPath>
+        <PackageTags>atlas;erp;ddd;kernel;database;efcore;infrastructure</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <RepositoryUrl>https://github.com/Potestaris/ATLAS.Kernel.Database</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Description>ATLAS.Kernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
+This project acts as part of the Kernel, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
+        </Description>
+    </PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<None Include="$(SolutionDir)LICENSE" Pack="true" PackagePath="\" />
+		<None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+</Project>
