@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Configuration;
+namespace ATLAS.Kernel.Database.Configuration;
 
 /// <summary>
 /// Identifies the relational database engine used by an ATLAS module's DbContext.

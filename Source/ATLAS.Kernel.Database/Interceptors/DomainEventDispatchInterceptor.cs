@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Interceptors;
+namespace ATLAS.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that dispatches all pending
@@ -16,28 +16,20 @@ namespace ATLAS.SharedKernel.Database.Interceptors;
 /// if a handler triggers another <c>SaveChanges</c> within the same scope.
 /// </para>
 /// </remarks>
-public sealed class DomainEventDispatchInterceptor : SaveChangesInterceptor
+/// <remarks>Initialises the interceptor with the MediatR publisher.</remarks>
+public sealed class DomainEventDispatchInterceptor(IPublisher publisher) : SaveChangesInterceptor
 {
-    private readonly IPublisher _publisher;
-
-    /// <summary>Initialises the interceptor with the MediatR publisher.</summary>
-    public DomainEventDispatchInterceptor(IPublisher publisher)
-        => _publisher = publisher;
 
     /// <inheritdoc/>
-    public override async ValueTask<int> SavedChangesAsync(
-        SaveChangesCompletedEventData eventData,
-        int                           result,
-        CancellationToken             cancellationToken = default)
+    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData,
+        int result, CancellationToken cancellationToken = default)
     {
         await DispatchDomainEventsAsync(eventData.Context, cancellationToken);
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public override int SavedChanges(
-        SaveChangesCompletedEventData eventData,
-        int                           result)
+    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
     {
         DispatchDomainEventsAsync(eventData.Context, CancellationToken.None)
             .GetAwaiter().GetResult();
@@ -46,8 +38,7 @@ public sealed class DomainEventDispatchInterceptor : SaveChangesInterceptor
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
-    private async Task DispatchDomainEventsAsync(
-        DbContext?        context,
+    private async Task DispatchDomainEventsAsync(DbContext? context,
         CancellationToken cancellationToken)
     {
         if (context is null) return;
@@ -67,6 +58,6 @@ public sealed class DomainEventDispatchInterceptor : SaveChangesInterceptor
             aggregate.ClearDomainEvents();
 
         foreach (var domainEvent in events)
-            await _publisher.Publish(domainEvent, cancellationToken);
+            await publisher.Publish(domainEvent, cancellationToken);
     }
 }

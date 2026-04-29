@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ATLAS.SharedKernel.Database.UnitOfWork;
+namespace ATLAS.Kernel.Database.UnitOfWork;
 
 /// <summary>
 /// Generic implementation of <see cref="IUnitOfWork"/> backed by a specific
