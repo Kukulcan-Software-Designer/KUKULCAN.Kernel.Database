@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Extensions;
+namespace ATLAS.Kernel.Database.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="ModelBuilder"/> that apply ATLAS global
@@ -58,9 +58,7 @@ public static class ModelBuilderExtensions
     /// // WHERE TenantId = @currentTenantId added automatically.
     /// </code>
     /// </example>
-    public static ModelBuilder ApplyTenantFilter(
-        this ModelBuilder modelBuilder,
-        ITenantContext    tenantContext)
+    public static ModelBuilder ApplyTenantFilter(this ModelBuilder modelBuilder, ITenantContext tenantContext)
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
@@ -85,9 +83,7 @@ public static class ModelBuilderExtensions
         modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
     }
 
-    private static void SetTenantFilter<T>(
-        ModelBuilder   modelBuilder,
-        ITenantContext tenantContext)
+    private static void SetTenantFilter<T>(ModelBuilder modelBuilder, ITenantContext tenantContext)
         where T : class, ITenantAware
     {
         // Closure — EF Core evaluates this per query

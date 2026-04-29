@@ -1,10 +1,10 @@
-using ATLAS.SharedKernel.Database.Configuration;
-using ATLAS.SharedKernel.Database.Interceptors;
-using ATLAS.SharedKernel.Database.UnitOfWork;
+using ATLAS.Kernel.Database.Configuration;
+using ATLAS.Kernel.Database.Interceptors;
+using ATLAS.Kernel.Database.UnitOfWork;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ATLAS.SharedKernel.Database.Extensions;
+namespace ATLAS.Kernel.Database.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IServiceCollection"/> that register an ATLAS
@@ -52,10 +52,8 @@ public static class ServiceCollectionExtensions
     ///   <item><see cref="SlowQueryInterceptor"/> (singleton)</item>
     /// </list>
     /// </remarks>
-    public static IServiceCollection AddAtlasDbContext<TContext>(
-        this IServiceCollection services,
-        IConfiguration          configuration)
-        where TContext : AtlasDbContextBase
+    public static IServiceCollection AddAtlasDbContext<TContext>(this IServiceCollection services,
+        IConfiguration configuration) where TContext : AtlasDbContextBase
     {
         // ① Bind and validate options
         var section = configuration.GetSection(AtlasDatabaseOptions.SectionKey);

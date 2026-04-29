@@ -1,4 +1,4 @@
-namespace ATLAS.SharedKernel.Database.Interceptors;
+namespace ATLAS.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that enforces immutability for
@@ -35,10 +35,8 @@ public sealed class ImmutableEntityInterceptor : SaveChangesInterceptor
     }
 
     /// <inheritdoc/>
-    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
-        DbContextEventData      eventData,
-        InterceptionResult<int> result,
-        CancellationToken       cancellationToken = default)
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+        InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         ThrowIfImmutableEntityModified(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);

@@ -1,10 +1,10 @@
-# ATLAS.SharedKernel.Database
+# ATLAS.Kernel.Database
 
 ## Overview
 
-`ATLAS.SharedKernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
+`ATLAS.Kernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
 
-This project acts as part of the **Shared Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
+This project acts as part of the **Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ It typically sits in the **Shared Kernel layer**, meaning:
 ## Project Structure
 
 ```
-ATLAS.SharedKernel.Database/
+ATLAS.Kernel.Database/
 │
 ├── Source/        # Main source code (currently empty or minimal)
 ├── Tests/         # Unit and integration tests
@@ -95,7 +95,7 @@ public interface IUnitOfWork
 This library should be referenced by infrastructure layers of other modules:
 
 ```bash
-dotnet add reference ATLAS.SharedKernel.Database
+dotnet add reference ATLAS.Kernel.Database
 ```
 
 Example usage in a module:
@@ -130,9 +130,24 @@ services.AddDbContext<MyModuleDbContext>(options =>
 - Outbox pattern integration
 - Migration helpers
 
+## Requirements
+
+- **.NET 10**
+- MediatR 12.*
+- FluentValidation 11.*
+- Microsoft.Extensions.Logging.Abstractions 10.*
+
 ## License
 
-This project is licensed under the terms defined in the `LICENSE` file.
+This project is owned and maintained by **Kratos Software Design** and is distributed under the **General Public License (GPL)**.
+
+This means the software is free to use, modify, and redistribute, provided that:
+
+- The original copyright notice is preserved.
+- Proper attribution is given to the original creators.
+- Any derivative work distributed must remain under the same GPL license terms.
+
+For full license terms, see the `LICENSE` file included in this repository.
 
 ## Notes
 

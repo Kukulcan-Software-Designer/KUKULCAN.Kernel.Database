@@ -1,9 +1,9 @@
-using ATLAS.SharedKernel.Database.Configuration;
-using ATLAS.SharedKernel.Database.Extensions;
-using ATLAS.SharedKernel.Database.Interceptors;
+using ATLAS.Kernel.Database.Configuration;
+using ATLAS.Kernel.Database.Extensions;
+using ATLAS.Kernel.Database.Interceptors;
 using Microsoft.Extensions.Options;
 
-namespace ATLAS.SharedKernel.Database;
+namespace ATLAS.Kernel.Database;
 
 /// <summary>
 /// Abstract base class for all ATLAS module DbContexts.
@@ -52,32 +52,18 @@ namespace ATLAS.SharedKernel.Database;
 /// </code>
 /// </para>
 /// </remarks>
-public abstract class AtlasDbContextBase : DbContext
+/// <remarks>
+/// Initialises a new instance with all required cross-cutting services.
+/// </remarks>
+public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options, ITenantContext tenantContext,
+    ICurrentUser currentUser, IDateTimeProvider dateTimeProvider, IPublisher publisher) : DbContext
 {
-    private readonly AtlasDatabaseOptions _opts;
-    private readonly ITenantContext       _tenantContext;
-    private readonly ICurrentUser         _currentUser;
-    private readonly IDateTimeProvider    _clock;
-    private readonly IPublisher           _publisher;
-
-    // ── Constructor ────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Initialises a new instance with all required cross-cutting services.
-    /// </summary>
-    protected AtlasDbContextBase(
-        IOptions<AtlasDatabaseOptions> options,
-        ITenantContext                 tenantContext,
-        ICurrentUser                  currentUser,
-        IDateTimeProvider             dateTimeProvider,
-        IPublisher                    publisher)
-    {
-        _opts          = options?.Value   ?? throw new ArgumentNullException(nameof(options));
-        _tenantContext = tenantContext     ?? throw new ArgumentNullException(nameof(tenantContext));
-        _currentUser   = currentUser      ?? throw new ArgumentNullException(nameof(currentUser));
-        _clock         = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _publisher     = publisher        ?? throw new ArgumentNullException(nameof(publisher));
-    }
+    private readonly AtlasDatabaseOptions _opts = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly ITenantContext _tenantContext = tenantContext ?? throw new ArgumentNullException(nameof(tenantContext));
+    private readonly ICurrentUser _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+    private readonly IDateTimeProvider _clock = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+    private readonly IPublisher _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
+    private const string CommandTimeoutMethodName = "CommandTimeout";
 
     // ── OnConfiguring — provider selection ────────────────────────────────────
 
@@ -140,18 +126,14 @@ public abstract class AtlasDbContextBase : DbContext
     // Each method uses reflection to avoid direct package references in this library.
     // A clear error is thrown when the required NuGet package is missing.
 
-    private static void ConfigureSqlServer(
-        DbContextOptionsBuilder optionsBuilder,
-        string connectionString, int timeoutSec,
-        int maxRetry, TimeSpan maxDelay)
+    private static void ConfigureSqlServer(DbContextOptionsBuilder optionsBuilder,
+        string connectionString, int timeoutSec, int maxRetry, TimeSpan maxDelay)
     {
         try
         {
             var type = Type.GetType(
                 "Microsoft.EntityFrameworkCore.SqlServerDbContextOptionsExtensions, " +
-                "Microsoft.EntityFrameworkCore.SqlServer");
-
-            if (type is null) throw NotInstalled("Microsoft.EntityFrameworkCore.SqlServer");
+                "Microsoft.EntityFrameworkCore.SqlServer") ?? throw NotInstalled("Microsoft.EntityFrameworkCore.SqlServer");
 
             type.GetMethod("UseSqlServer",
                     [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
@@ -159,10 +141,10 @@ public abstract class AtlasDbContextBase : DbContext
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
-                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<int>?)])
+                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<int>)])
                                 ?.Invoke(o, [maxRetry, maxDelay, null]);
                     })]);
         }
@@ -172,18 +154,14 @@ public abstract class AtlasDbContextBase : DbContext
         }
     }
 
-    private static void ConfigurePostgreSql(
-        DbContextOptionsBuilder optionsBuilder,
-        string connectionString, int timeoutSec,
-        int maxRetry, TimeSpan maxDelay)
+    private static void ConfigurePostgreSql(DbContextOptionsBuilder optionsBuilder,
+        string connectionString, int timeoutSec, int maxRetry, TimeSpan maxDelay)
     {
         try
         {
             var type = Type.GetType(
                 "Microsoft.EntityFrameworkCore.NpgsqlDbContextOptionsBuilderExtensions, " +
-                "Npgsql.EntityFrameworkCore.PostgreSQL");
-
-            if (type is null) throw NotInstalled("Npgsql.EntityFrameworkCore.PostgreSQL");
+                "Npgsql.EntityFrameworkCore.PostgreSQL") ?? throw NotInstalled("Npgsql.EntityFrameworkCore.PostgreSQL");
 
             type.GetMethod("UseNpgsql",
                     [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
@@ -191,10 +169,10 @@ public abstract class AtlasDbContextBase : DbContext
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
-                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<string>?)])
+                                    [typeof(int), typeof(TimeSpan), typeof(IEnumerable<string>)])
                                 ?.Invoke(o, [maxRetry, maxDelay, null]);
                     })]);
         }
@@ -204,17 +182,14 @@ public abstract class AtlasDbContextBase : DbContext
         }
     }
 
-    private static void ConfigureMySql(
-        DbContextOptionsBuilder optionsBuilder,
+    private static void ConfigureMySql(DbContextOptionsBuilder optionsBuilder,
         string connectionString, int timeoutSec)
     {
         try
         {
             var type = Type.GetType(
                 "Microsoft.EntityFrameworkCore.MySqlDbContextOptionsBuilderExtensions, " +
-                "Pomelo.EntityFrameworkCore.MySql");
-
-            if (type is null) throw NotInstalled("Pomelo.EntityFrameworkCore.MySql");
+                "Pomelo.EntityFrameworkCore.MySql") ?? throw NotInstalled("Pomelo.EntityFrameworkCore.MySql");
 
             var svType = Type.GetType(
                 "Microsoft.EntityFrameworkCore.ServerVersion, Pomelo.EntityFrameworkCore.MySql");
@@ -227,7 +202,7 @@ public abstract class AtlasDbContextBase : DbContext
                     [typeof(DbContextOptionsBuilder), typeof(string), svType!, typeof(Action<object>)])
                 ?.Invoke(null, [optionsBuilder, connectionString, serverVersion,
                     (Action<object>)(o =>
-                        o.GetType().GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]))]);
+                        o.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
         }
         catch (Exception ex) when (ex is not NotSupportedException)
         {
@@ -235,23 +210,20 @@ public abstract class AtlasDbContextBase : DbContext
         }
     }
 
-    private static void ConfigureOracle(
-        DbContextOptionsBuilder optionsBuilder,
+    private static void ConfigureOracle(DbContextOptionsBuilder optionsBuilder,
         string connectionString, int timeoutSec)
     {
         try
         {
             var type = Type.GetType(
                 "Microsoft.EntityFrameworkCore.OracleDbContextOptionsExtensions, " +
-                "Oracle.EntityFrameworkCore");
-
-            if (type is null) throw NotInstalled("Oracle.EntityFrameworkCore");
+                "Oracle.EntityFrameworkCore") ?? throw NotInstalled("Oracle.EntityFrameworkCore");
 
             type.GetMethod("UseOracle",
                     [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
                 ?.Invoke(null, [optionsBuilder, connectionString,
                     (Action<object>)(o =>
-                        o.GetType().GetMethod("CommandTimeout")?.Invoke(o, [timeoutSec]))]);
+                        0.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
         }
         catch (Exception ex) when (ex is not NotSupportedException)
         {
@@ -259,17 +231,14 @@ public abstract class AtlasDbContextBase : DbContext
         }
     }
 
-    private static void ConfigureSqlite(
-        DbContextOptionsBuilder optionsBuilder,
+    private static void ConfigureSqlite(DbContextOptionsBuilder optionsBuilder,
         string connectionString)
     {
         try
         {
             var type = Type.GetType(
                 "Microsoft.EntityFrameworkCore.SqliteDbContextOptionsBuilderExtensions, " +
-                "Microsoft.EntityFrameworkCore.Sqlite");
-
-            if (type is null) throw NotInstalled(
+                "Microsoft.EntityFrameworkCore.Sqlite") ?? throw NotInstalled(
                 "Microsoft.EntityFrameworkCore.Sqlite (development/test only)");
 
             type.GetMethod("UseSqlite",
