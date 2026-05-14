@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latestmajor</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ATLAS.Kernel.Database.Client</RootNamespace>
+    <AssemblyName>ATLAS.Kernel.Database.Client</AssemblyName>
+  </PropertyGroup>
+
+  <!--
+    ── Ruta asumida ──────────────────────────────────────────────────────────────
+    La solución tiene esta estructura:
+      ATLAS.Kernel.Database/
+        Source/
+          ATLAS.Kernel.Database/          ← librería
+        Sourcxe Client/
+          ATLAS.Kernel.Database.Client/     ← este proyecto
+    ─────────────────────────────────────────────────────────────────────────────
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Source\ATLAS.Kernel.Database\ATLAS.Kernel.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ── Acceso a las funciones del Nucleo del proyecto ATLAS ────────────── -->
+    <PackageReference Include="ATLAS.Kernel"                                    Version="2.0.3" />
+    
+    <!-- ── Proveedores de BD (los 3 requeridos) ────────────────────────────── -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"         Version="10.*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"           Version="10.*" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql"                Version="9.*"  />
+
+    <!-- ── EF Core Tools (migraciones) ────────────────────────────────────── -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"             Version="10.*" />
+
+    <!-- ── MediatR (para IPublisher en el stub de demo) ───────────────────── -->
+    <PackageReference Include="MediatR"                                         Version="14.*" />
+
+    <!-- ── Configuración ───────────────────────────────────────────────────── -->
+    <PackageReference Include="Microsoft.Extensions.Configuration"              Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"         Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder"       Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection"        Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging"                    Version="10.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console"            Version="10.*" />
+
+    <!-- ── UI de consola ───────────────────────────────────────────────────── -->
+    <PackageReference Include="Spectre.Console"                                 Version="0.49.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
