@@ -1,3 +1,4 @@
+using ATLAS.Kernel.Primitives.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ATLAS.Kernel.Database.UnitOfWork;
@@ -39,7 +40,7 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbC
     private readonly TContext               _context;
     private         IDbContextTransaction?  _transaction;
 
-    /// <summary>Initialises the unit of work with the module's DbContext.</summary>
+    /// <summary>Initializes the unit of work with the module's DbContext.</summary>
     public UnitOfWork(TContext context)
         => _context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -52,8 +53,7 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbC
     {
         if (_transaction is not null)
             throw new InvalidOperationException(
-                "A transaction is already in progress. " +
-                "Commit or roll back the current transaction before starting a new one.");
+                "A transaction is already in progress. Commit or roll back the current transaction before starting a new one.");
 
         _transaction = await _context.Database
             .BeginTransactionAsync(cancellationToken);
@@ -64,8 +64,7 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbC
     {
         if (_transaction is null)
             throw new InvalidOperationException(
-                "No active transaction to commit. " +
-                "Call BeginTransactionAsync before CommitTransactionAsync.");
+                "No active transaction to commit. Call BeginTransactionAsync before CommitTransactionAsync.");
         try
         {
             await _context.SaveChangesAsync(cancellationToken);
@@ -81,7 +80,9 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbC
     /// <inheritdoc/>
     public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (_transaction is null) return;
+        if (_transaction is null)
+            throw new InvalidOperationException("No active transaction to end transaction. Call BeginTransactionAsync before EndTransactionAsync.");
+
         try
         {
             await _transaction.RollbackAsync(cancellationToken);
@@ -91,6 +92,20 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbC
             await _transaction.DisposeAsync();
             _transaction = null;
         }
+    }
+
+    /// <summary>
+    /// Explicit transaction management is only needed for cross-aggregate operations outside the MediatR pipeline.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task EndTransactionAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        if (_transaction is null)
+            throw new InvalidOperationException("No active transaction to end transaction. Call BeginTransactionAsync before EndTransactionAsync.");
+        await _transaction.DisposeAsync();
+        _transaction = null;
     }
 
     /// <inheritdoc/>

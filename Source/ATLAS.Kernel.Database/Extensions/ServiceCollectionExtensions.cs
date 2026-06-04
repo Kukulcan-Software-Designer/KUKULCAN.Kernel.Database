@@ -1,6 +1,7 @@
 using ATLAS.Kernel.Database.Configuration;
 using ATLAS.Kernel.Database.Interceptors;
 using ATLAS.Kernel.Database.UnitOfWork;
+using ATLAS.Kernel.Primitives.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,10 +57,10 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration) where TContext : AtlasDbContextBase
     {
         // ① Bind and validate options
-        var section = configuration.GetSection(AtlasDatabaseOptions.SectionKey);
+        IConfigurationSection section = configuration.GetSection(AtlasDatabaseOptions.SectionKey);
         services.Configure<AtlasDatabaseOptions>(section);
 
-        var opts = section.Get<AtlasDatabaseOptions>() ?? new AtlasDatabaseOptions();
+        AtlasDatabaseOptions opts = section.Get<AtlasDatabaseOptions>() ?? new AtlasDatabaseOptions();
 
         if (string.IsNullOrWhiteSpace(opts.ConnectionString))
             throw new InvalidOperationException(
