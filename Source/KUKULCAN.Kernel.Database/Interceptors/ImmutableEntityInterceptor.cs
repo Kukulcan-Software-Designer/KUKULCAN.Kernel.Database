@@ -1,4 +1,4 @@
-namespace ATLAS.Kernel.Database.Interceptors;
+namespace KUKULCAN.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that enforces immutability for
@@ -26,9 +26,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 public sealed class ImmutableEntityInterceptor : SaveChangesInterceptor
 {
     /// <inheritdoc/>
-    public override InterceptionResult<int> SavingChanges(
-        DbContextEventData      eventData,
-        InterceptionResult<int> result)
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         ThrowIfImmutableEntityModified(eventData.Context);
         return base.SavingChanges(eventData, result);

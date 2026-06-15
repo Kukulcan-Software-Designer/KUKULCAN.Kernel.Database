@@ -1,13 +1,14 @@
-using ATLAS.Kernel.Primitives.Interfaces;
+using KUKULCAN.Kernel.Database.Extensions;
+using KUKULCAN.Kernel.Primitives.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ATLAS.Kernel.Database.UnitOfWork;
+namespace KUKULCAN.Kernel.Database.UnitOfWork;
 
 /// <summary>
 /// Generic implementation of <see cref="IUnitOfWork"/> backed by a specific
-/// <typeparamref name="TContext"/> (a module's <see cref="AtlasDbContextBase"/>).
+/// <typeparamref name="TContext"/> (a module's <see cref="KukulcanDbContextBase"/>).
 /// Registered automatically by
-/// <see cref="Extensions.ServiceCollectionExtensions.AddAtlasDbContext{TContext}"/>.
+/// <see cref="ServiceCollectionExtensions.AddAtlasDbContext{TContext}"/>.
 /// </summary>
 /// <typeparam name="TContext">
 /// The module's specific DbContext type, e.g. <c>CrmDbContext</c>, <c>I18nDbContext</c>.
@@ -35,7 +36,7 @@ namespace ATLAS.Kernel.Database.UnitOfWork;
 /// }
 /// </code>
 /// </example>
-public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : AtlasDbContextBase
+public sealed class UnitOfWork<TContext> : IUnitOfWork where TContext : KukulcanDbContextBase
 {
     private readonly TContext               _context;
     private         IDbContextTransaction?  _transaction;

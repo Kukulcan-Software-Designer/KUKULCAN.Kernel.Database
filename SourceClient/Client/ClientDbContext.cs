@@ -1,20 +1,20 @@
-using ATLAS.Kernel.Abstractions.Interfaces.Infrastructure;
-using ATLAS.Kernel.Database.Configuration;
-using ATLAS.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Infrastructure;
+using KUKULCAN.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Database.Configuration;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace ATLAS.Kernel.Database.Client.Client;
+namespace KUKULCAN.Kernel.Database.Client.Client;
 
 /// <summary>
 /// DbContext concreto de demostración.
-/// Hereda de <see cref="AtlasDbContextBase"/> para demostrar todos
+/// Hereda de <see cref="KukulcanDbContextBase"/> para demostrar todos
 /// sus interceptores y filtros globales.
 /// </summary>
-public sealed class ClientDbContext(IOptions<AtlasDatabaseOptions> options, ITenantContext tenantContext, ICurrentUser currentUser,
-    IDateTimeProvider dateTimeProvider, IPublisher publisher, SlowQueryInterceptor slowQueryInterceptor) : 
-    AtlasDbContextBase(options, tenantContext, currentUser, dateTimeProvider, publisher)
+public sealed class ClientDbContext(IOptions<KukulcanDatabaseOptions> options, ITenantContext tenantContext, ICurrentUser currentUser,
+    IDateTimeProvider dateTimeProvider, IPublisher publisher, SlowQueryInterceptor slowQueryInterceptor) :
+    KukulcanDbContextBase(options, tenantContext, currentUser, dateTimeProvider, publisher)
 {
     // ── DbSets ────────────────────────────────────────────────────────────────
     public DbSet<ClientProduct> Products => Set<ClientProduct>();
@@ -27,7 +27,7 @@ public sealed class ClientDbContext(IOptions<AtlasDatabaseOptions> options, ITen
     {
         base.OnConfiguring(optionsBuilder);
 
-        // SlowQueryInterceptor se añade aquí porque AtlasDbContextBase lo registra
+        // SlowQueryInterceptor se añade aquí porque KukulcanDbContextBase lo registra
         // en DI como singleton pero NO lo añade en su propio OnConfiguring.
         optionsBuilder.AddInterceptors(slowQueryInterceptor);
     }

@@ -1,17 +1,17 @@
-using ATLAS.Kernel.Database.Client.Client;
-using ATLAS.Kernel.Database.Configuration;
-using ATLAS.Kernel.Database.Interceptors;
-using ATLAS.Kernel.Database.UnitOfWork;
+using KUKULCAN.Kernel.Database.Client.Client;
+using KUKULCAN.Kernel.Database.Configuration;
+using KUKULCAN.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Database.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
-namespace ATLAS.Kernel.Database.Client.UI;
+namespace KUKULCAN.Kernel.Database.Client.UI;
 
 /// <summary>
 /// Menú interactivo que demuestra cada característica de ATLAS.Kernel.Database.
 /// </summary>
 public sealed class ConsoleMenu(ClientDbContext db, UnitOfWork<ClientDbContext> uow, ConsoleCurrentUser currentUser,
-    ConsoleTenantContext tenantContext, ConsoleDateTimeProvider clock, AtlasDatabaseOptions opts)
+    ConsoleTenantContext tenantContext, ConsoleDateTimeProvider clock, KukulcanDatabaseOptions opts)
 {
     // ══════════════════════════════════════════════════════════════════════════
     // Entry point
@@ -70,7 +70,7 @@ public sealed class ConsoleMenu(ClientDbContext db, UnitOfWork<ClientDbContext> 
 
     private Task ShowConfigAsync()
     {
-        AnsiConsole.Write(new Rule("[blue]Configuración — AtlasDatabaseOptions[/]").RuleStyle(Style.Parse("blue")));
+        AnsiConsole.Write(new Rule("[blue]Configuración — KukulkanDatabaseOptions[/]").RuleStyle(Style.Parse("blue")));
 
         var t = new Table().AddColumn("Clave").AddColumn("Valor");
         t.AddRow("Provider",                  $"[cyan]{opts.Provider}[/]");
@@ -468,7 +468,6 @@ public sealed class ConsoleMenu(ClientDbContext db, UnitOfWork<ClientDbContext> 
         {
             DatabaseProvider.PostgreSql => "cyan",
             DatabaseProvider.SqlServer  => "red",
-            DatabaseProvider.MySql      => "orange1",
             _                           => "white"
         };
 

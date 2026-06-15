@@ -1,9 +1,14 @@
-namespace ATLAS.Kernel.Database.Extensions;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Domain;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Infrastructure;
+using KUKULCAN.Kernel.Database;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace KUKULCAN.Kernel.Database.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="ModelBuilder"/> that apply ATLAS global
 /// query filters and conventions during <c>OnModelCreating</c>.
-/// Called automatically by <see cref="AtlasDbContextBase"/>.
+/// Called automatically by <see cref="KukulcanDbContextBase"/>.
 /// </summary>
 public static class ModelBuilderExtensions
 {
@@ -19,7 +24,7 @@ public static class ModelBuilderExtensions
     /// <param name="modelBuilder">The EF Core model builder.</param>
     /// <example>
     /// <code>
-    /// // In AtlasDbContextBase.OnModelCreating:
+    /// // In KukulcanDbContextBase.OnModelCreating:
     /// modelBuilder.ApplySoftDeleteFilter();
     ///
     /// // Effect: every query against ISoftDeletable entities will have
@@ -28,7 +33,7 @@ public static class ModelBuilderExtensions
     /// </example>
     public static ModelBuilder ApplySoftDeleteFilter(this ModelBuilder modelBuilder)
     {
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (!typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType)) continue;
 
@@ -51,7 +56,7 @@ public static class ModelBuilderExtensions
     /// <param name="tenantContext">The current tenant context, injected per request.</param>
     /// <example>
     /// <code>
-    /// // In AtlasDbContextBase.OnModelCreating:
+    /// // In KukulcanDbContextBase.OnModelCreating:
     /// modelBuilder.ApplyTenantFilter(_tenantContext);
     ///
     /// // Effect: every query against ITenantAware entities will have
@@ -60,7 +65,7 @@ public static class ModelBuilderExtensions
     /// </example>
     public static ModelBuilder ApplyTenantFilter(this ModelBuilder modelBuilder, ITenantContext tenantContext)
     {
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (!typeof(ITenantAware).IsAssignableFrom(entityType.ClrType)) continue;
             if (entityType.IsOwned()) continue;

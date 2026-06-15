@@ -1,9 +1,9 @@
-using ATLAS.Kernel.Abstractions.Interfaces.Infrastructure;
-using ATLAS.Kernel.Database.Client.Client;
-using ATLAS.Kernel.Database.Client.UI;
-using ATLAS.Kernel.Database.Configuration;
-using ATLAS.Kernel.Database.Interceptors;
-using ATLAS.Kernel.Database.UnitOfWork;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Infrastructure;
+using KUKULCAN.Kernel.Database.Client.Client;
+using KUKULCAN.Kernel.Database.Client.UI;
+using KUKULCAN.Kernel.Database.Configuration;
+using KUKULCAN.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Database.UnitOfWork;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +12,12 @@ using Microsoft.Extensions.Options;
 using Spectre.Console;
 
 // ── Bootstrap logger mínimo ────────────────────────────────────────────────────
-using var loggerFactory = LoggerFactory.Create(b =>
+using ILoggerFactory loggerFactory = LoggerFactory.Create(b =>
     b.AddSimpleConsole(o => { o.SingleLine = true; o.TimestampFormat = "[HH:mm:ss] "; })
      .SetMinimumLevel(LogLevel.Warning));   // Solo warnings y errores — SlowQuery los emitirá aquí
 
 // ── Configuración ──────────────────────────────────────────────────────────────
-var configuration = new ConfigurationBuilder()
+IConfigurationRoot configuration = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false)
     .AddEnvironmentVariables()
@@ -27,33 +27,30 @@ var configuration = new ConfigurationBuilder()
 AnsiConsole.Clear();
 AnsiConsole.Write(new Rule("[bold blue]ATLAS.Kernel.Database — Demo[/]").RuleStyle(Style.Parse("blue")));
 
-var providerChoice = AnsiConsole.Prompt(
+string providerChoice = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
         .Title("Selecciona el [bold]proveedor de base de datos[/]:")
         .AddChoices(
             "PostgreSQL   — Npgsql.EntityFrameworkCore.PostgreSQL",
-            "SQL Server   — Microsoft.EntityFrameworkCore.SqlServer",
-            "MySQL        — Pomelo.EntityFrameworkCore.MySql"));
+            "SQL Server   — Microsoft.EntityFrameworkCore.SqlServer"));
 
-var selectedProvider = providerChoice switch
+DatabaseProvider selectedProvider = providerChoice switch
 {
     var s when s.StartsWith("PostgreSQL") => DatabaseProvider.PostgreSql,
     var s when s.StartsWith("SQL Server") => DatabaseProvider.SqlServer,
-    var s when s.StartsWith("MySQL")      => DatabaseProvider.MySql,
     _                                      => DatabaseProvider.PostgreSql
 };
 
-var providerKey = selectedProvider switch
+string providerKey = selectedProvider switch
 {
     DatabaseProvider.PostgreSql => "PostgreSql",
     DatabaseProvider.SqlServer  => "SqlServer",
-    DatabaseProvider.MySql      => "MySql",
     _ => "PostgreSql"
 };
 
-var connectionString = configuration[$"Providers:{providerKey}:ConnectionString"]
-    ?? throw new InvalidOperationException(
-        $"Falta Providers:{providerKey}:ConnectionString en appsettings.json");
+string connectionString = configuration[$"Providers:{providerKey}:ConnectionString"]
+                          ?? throw new InvalidOperationException(
+                              $"Falta Providers:{providerKey}:ConnectionString en appsettings.json");
 
 AnsiConsole.MarkupLine($"[green]✔[/] Proveedor seleccionado: [cyan]{selectedProvider}[/]");
 
@@ -64,11 +61,11 @@ var services = new ServiceCollection();
 services.AddSingleton(loggerFactory);
 services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-// AtlasDatabaseOptions — se construye a partir de la sección Atlas:Database
+// KukulkanDatabaseOptions — se construye a partir de la sección Atlas:Database
 // y se sobreescribe Provider y ConnectionString con la selección del usuario
-services.Configure<AtlasDatabaseOptions>(opts =>
+services.Configure<KukulcanDatabaseOptions>(opts =>
 {
-    configuration.GetSection(AtlasDatabaseOptions.SectionKey).Bind(opts);
+    configuration.GetSection(KukulcanDatabaseOptions.SectionKey).Bind(opts);
     opts.Provider         = selectedProvider;
     opts.ConnectionString = connectionString;
 });
@@ -102,15 +99,15 @@ services.AddScoped<ConsoleMenu>(sp => new ConsoleMenu(
     sp.GetRequiredService<ConsoleCurrentUser>(),
     sp.GetRequiredService<ConsoleTenantContext>(),
     sp.GetRequiredService<ConsoleDateTimeProvider>(),
-    sp.GetRequiredService<IOptions<AtlasDatabaseOptions>>().Value));
+    sp.GetRequiredService<IOptions<KukulcanDatabaseOptions>>().Value));
 
-//  Ejecutar en un scope único 
-await using var sp = services.BuildServiceProvider();
+//  Ejecutar en un scope único
+await using ServiceProvider sp = services.BuildServiceProvider();
 
 using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
 
-using var scope = sp.CreateScope();
+using IServiceScope scope = sp.CreateScope();
 
 try
 {

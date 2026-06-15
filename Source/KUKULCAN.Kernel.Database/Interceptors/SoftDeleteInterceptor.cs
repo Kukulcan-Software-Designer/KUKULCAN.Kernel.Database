@@ -1,4 +1,6 @@
-namespace ATLAS.Kernel.Database.Interceptors;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace KUKULCAN.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that converts
@@ -46,15 +48,15 @@ public sealed class SoftDeleteInterceptor(ICurrentUser currentUser, IDateTimePro
     {
         if (context is null) return;
 
-        var now       = clock.UtcNow;
-        var deletedBy = currentUser.IsAuthenticated ? currentUser.UserName : "system";
+        DateTimeOffset now       = clock.UtcNow;
+        string deletedBy = currentUser.IsAuthenticated ? currentUser.UserName : "system";
 
-        var deletedEntries = context.ChangeTracker
+        List<EntityEntry<ISoftDeletable>> deletedEntries = context.ChangeTracker
             .Entries<ISoftDeletable>()
             .Where(e => e.State == EntityState.Deleted)
             .ToList();
 
-        foreach (var entry in deletedEntries)
+        foreach (EntityEntry<ISoftDeletable> entry in deletedEntries)
         {
             entry.State = EntityState.Modified;   // prevent physical DELETE
             entry.Entity.MarkAsDeleted(deletedBy, now);

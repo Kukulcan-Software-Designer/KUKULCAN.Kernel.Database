@@ -1,13 +1,13 @@
-using ATLAS.Kernel.Database.Configuration;
-using ATLAS.Kernel.Database.Extensions;
-using ATLAS.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Database.Configuration;
+using KUKULCAN.Kernel.Database.Extensions;
+using KUKULCAN.Kernel.Database.Interceptors;
 using Microsoft.Extensions.Options;
 
-namespace ATLAS.Kernel.Database;
+namespace KUKULCAN.Kernel.Database;
 
 /// <summary>
 /// Abstract base class for all ATLAS module DbContexts.
-/// Centralises every cross-cutting persistence concern so that individual module
+/// Centralizes every cross-cutting persistence concern so that individual module
 /// DbContexts only need to declare their own <c>DbSet&lt;T&gt;</c> properties and
 /// set their schema in <c>OnModelCreating</c>.
 /// </summary>
@@ -15,7 +15,7 @@ namespace ATLAS.Kernel.Database;
 /// <para>
 /// <b>Responsibilities handled by this base class:</b>
 /// <list type="bullet">
-///   <item>Database provider selection based on <see cref="AtlasDatabaseOptions.Provider"/>.</item>
+///   <item>Database provider selection based on <see cref="KukulcanDatabaseOptions.Provider"/>.</item>
 ///   <item>Auto-discovery of all <c>IEntityTypeConfiguration&lt;T&gt;</c> in the calling module's assembly.</item>
 ///   <item>Global soft-delete query filter (<c>WHERE IsDeleted = false</c>) for <see cref="ISoftDeletable"/> entities.</item>
 ///   <item>Global tenant isolation filter (<c>WHERE TenantId = @current</c>) for <see cref="ITenantAware"/> entities.</item>
@@ -29,10 +29,10 @@ namespace ATLAS.Kernel.Database;
 /// <para>
 /// <b>How to create a module DbContext:</b>
 /// <code>
-/// public sealed class CrmDbContext : AtlasDbContextBase
+/// public sealed class CrmDbContext : KukulcanDbContextBase
 /// {
 ///     public CrmDbContext(
-///         IOptions&lt;AtlasDatabaseOptions&gt; options,
+///         IOptions&lt;KukulkanDatabaseOptions&gt; options,
 ///         ITenantContext      tenantContext,
 ///         ICurrentUser        currentUser,
 ///         IDateTimeProvider   dateTimeProvider,
@@ -43,27 +43,27 @@ namespace ATLAS.Kernel.Database;
 ///     public DbSet&lt;Customer&gt; Customers => Set&lt;Customer&gt;();
 ///     public DbSet&lt;Contact&gt;  Contacts  => Set&lt;Contact&gt;();
 ///
-///     protected override void OnModelCreating(ModelBuilder modelBuilder)
+///     protected override void OnModelCreating(ModelBuilder mBuilder)
 ///     {
-///         modelBuilder.HasDefaultSchema("crm");
-///         base.OnModelCreating(modelBuilder);   // runs auto-discovery + filters
+///         mBuilder.HasDefaultSchema("crm");
+///         base.OnModelCreating(mBuilder);   // runs auto-discovery + filters
 ///     }
 /// }
 /// </code>
 /// </para>
 /// </remarks>
 /// <remarks>
-/// Initialises a new instance with all required cross-cutting services.
+/// Initializes a new instance with all required cross-cutting services.
 /// </remarks>
-public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options, ITenantContext tenantContext,
+public abstract class KukulcanDbContextBase(IOptions<KukulcanDatabaseOptions>? options, ITenantContext tenantContext,
     ICurrentUser currentUser, IDateTimeProvider dateTimeProvider, IPublisher publisher) : DbContext
 {
-    private readonly AtlasDatabaseOptions _opts = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly KukulcanDatabaseOptions _opts = options?.Value ?? throw new ArgumentNullException(nameof(options));
     private readonly ITenantContext _tenantContext = tenantContext ?? throw new ArgumentNullException(nameof(tenantContext));
     private readonly ICurrentUser _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     private readonly IDateTimeProvider _clock = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
     private readonly IPublisher _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
-    private const string CommandTimeoutMethodName = "CommandTimeout";
+    private const string _commandTimeoutMethodName = "CommandTimeout";
 
     // ── OnConfiguring — provider selection ────────────────────────────────────
 
@@ -89,8 +89,8 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
     }
 
     /// <summary>
-    /// Configures the database provider based on <see cref="AtlasDatabaseOptions.Provider"/>.
-    /// Override in a derived class to customise provider configuration.
+    /// Configures the database provider based on <see cref="KukulcanDatabaseOptions.Provider"/>.
+    /// Override in a derived class to customize provider configuration.
     /// </summary>
     protected virtual void ConfigureProvider(DbContextOptionsBuilder optionsBuilder)
     {
@@ -106,15 +106,6 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                 break;
             case DatabaseProvider.PostgreSql:
                 ConfigurePostgreSql(optionsBuilder, connStr, timeout, maxRetry, maxDelay);
-                break;
-            case DatabaseProvider.MySql:
-                ConfigureMySql(optionsBuilder, connStr, timeout);
-                break;
-            case DatabaseProvider.Oracle:
-                ConfigureOracle(optionsBuilder, connStr, timeout);
-                break;
-            case DatabaseProvider.Sqlite:
-                ConfigureSqlite(optionsBuilder, connStr);
                 break;
             default:
                 throw new NotSupportedException(
@@ -141,7 +132,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(_commandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
                                     [typeof(int), typeof(TimeSpan), typeof(IEnumerable<int>)])
@@ -169,7 +160,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
                     (Action<object>)(o =>
                     {
                         var t = o.GetType();
-                        t.GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
+                        t.GetMethod(_commandTimeoutMethodName)?.Invoke(o, [timeoutSec]);
                         if (maxRetry > 0)
                             t.GetMethod("EnableRetryOnFailure",
                                     [typeof(int), typeof(TimeSpan), typeof(IEnumerable<string>)])
@@ -182,76 +173,7 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
         }
     }
 
-    private static void ConfigureMySql(DbContextOptionsBuilder optionsBuilder,
-        string connectionString, int timeoutSec)
-    {
-        try
-        {
-            var type = Type.GetType(
-                "Microsoft.EntityFrameworkCore.MySqlDbContextOptionsBuilderExtensions, " +
-                "Pomelo.EntityFrameworkCore.MySql") ?? throw NotInstalled("Pomelo.EntityFrameworkCore.MySql");
-
-            var svType = Type.GetType(
-                "Microsoft.EntityFrameworkCore.ServerVersion, Pomelo.EntityFrameworkCore.MySql");
-
-            var serverVersion = svType
-                ?.GetMethod("AutoDetect", [typeof(string)])
-                ?.Invoke(null, [connectionString]);
-
-            type.GetMethod("UseMySql",
-                    [typeof(DbContextOptionsBuilder), typeof(string), svType!, typeof(Action<object>)])
-                ?.Invoke(null, [optionsBuilder, connectionString, serverVersion,
-                    (Action<object>)(o =>
-                        o.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
-        }
-        catch (Exception ex) when (ex is not NotSupportedException)
-        {
-            throw NotInstalled("Pomelo.EntityFrameworkCore.MySql", ex);
-        }
-    }
-
-    private static void ConfigureOracle(DbContextOptionsBuilder optionsBuilder,
-        string connectionString, int timeoutSec)
-    {
-        try
-        {
-            var type = Type.GetType(
-                "Microsoft.EntityFrameworkCore.OracleDbContextOptionsExtensions, " +
-                "Oracle.EntityFrameworkCore") ?? throw NotInstalled("Oracle.EntityFrameworkCore");
-
-            type.GetMethod("UseOracle",
-                    [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
-                ?.Invoke(null, [optionsBuilder, connectionString,
-                    (Action<object>)(o =>
-                        0.GetType().GetMethod(CommandTimeoutMethodName)?.Invoke(o, [timeoutSec]))]);
-        }
-        catch (Exception ex) when (ex is not NotSupportedException)
-        {
-            throw NotInstalled("Oracle.EntityFrameworkCore", ex);
-        }
-    }
-
-    private static void ConfigureSqlite(DbContextOptionsBuilder optionsBuilder,
-        string connectionString)
-    {
-        try
-        {
-            var type = Type.GetType(
-                "Microsoft.EntityFrameworkCore.SqliteDbContextOptionsBuilderExtensions, " +
-                "Microsoft.EntityFrameworkCore.Sqlite") ?? throw NotInstalled(
-                "Microsoft.EntityFrameworkCore.Sqlite (development/test only)");
-
-            type.GetMethod("UseSqlite",
-                    [typeof(DbContextOptionsBuilder), typeof(string), typeof(Action<object>)])
-                ?.Invoke(null, [optionsBuilder, connectionString, null]);
-        }
-        catch (Exception ex) when (ex is not NotSupportedException)
-        {
-            throw NotInstalled("Microsoft.EntityFrameworkCore.Sqlite", ex);
-        }
-    }
-
-    private static NotSupportedException NotInstalled(string package, Exception? inner = null)
+     private static NotSupportedException NotInstalled(string package, Exception? inner = null)
         => inner is null
             ? new NotSupportedException(
                 $"Package '{package}' is not installed. " +
@@ -276,14 +198,4 @@ public abstract class AtlasDbContextBase(IOptions<AtlasDatabaseOptions> options,
         // Global tenant isolation filter: WHERE TenantId = @currentTenantId
         modelBuilder.ApplyTenantFilter(_tenantContext);
     }
-
-    // ── SaveChanges ────────────────────────────────────────────────────────────
-
-    /// <inheritdoc/>
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        => base.SaveChangesAsync(cancellationToken);
-
-    /// <inheritdoc/>
-    public override int SaveChanges()
-        => base.SaveChanges();
 }

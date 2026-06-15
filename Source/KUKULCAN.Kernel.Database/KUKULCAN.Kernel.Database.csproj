@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RootNamespace>ATLAS.Kernel.Database</RootNamespace>
-        <AssemblyName>ATLAS.Kernel.Database</AssemblyName>
+        <RootNamespace>KUKULCAN.Kernel.Database</RootNamespace>
+        <AssemblyName>KUKULCAN.Kernel.Database</AssemblyName>
         <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
         <BaseOutputPath>$(SolutionDir)Bin\$(MSBuildProjectName)\</BaseOutputPath>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -17,7 +17,7 @@
 
     <!-- EF Core core only — providers added per-module or per-host -->
     <ItemGroup>
-        <PackageReference Include="ATLAS.Kernel" Version="2.0.6" />
+        <PackageReference Include="KUKULCAN.Kernel" Version="2.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.*" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.*" />
         <PackageReference Include="MediatR.Contracts" Version="2.*" />
@@ -35,7 +35,6 @@
         SQL Server  : Microsoft.EntityFrameworkCore.SqlServer
         PostgreSQL  : Npgsql.EntityFrameworkCore.PostgreSQL
         MySQL       : Pomelo.EntityFrameworkCore.MySql
-        SQLite (dev): Microsoft.EntityFrameworkCore.Sqlite
     -->
 
 </Project>
