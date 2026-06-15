@@ -1,10 +1,11 @@
-using ATLAS.Kernel.Database.Configuration;
-using ATLAS.Kernel.Database.Interceptors;
-using ATLAS.Kernel.Database.UnitOfWork;
+using KUKULCAN.Kernel.Database.Configuration;
+using KUKULCAN.Kernel.Database.Interceptors;
+using KUKULCAN.Kernel.Database.UnitOfWork;
+using KUKULCAN.Kernel.Primitives.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ATLAS.Kernel.Database.Extensions;
+namespace KUKULCAN.Kernel.Database.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IServiceCollection"/> that register an ATLAS
@@ -27,16 +28,16 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers a module's <typeparamref name="TContext"/> together with
-    /// <see cref="AtlasDatabaseOptions"/>, <see cref="IUnitOfWork"/>, and
+    /// <see cref="KukulcanDatabaseOptions"/>, <see cref="IUnitOfWork"/>, and
     /// all required database infrastructure services.
     /// </summary>
     /// <typeparam name="TContext">
-    /// The module's DbContext type. Must inherit from <see cref="AtlasDbContextBase"/>.
+    /// The module's DbContext type. Must inherit from <see cref="KukulcanDbContextBase"/>.
     /// </typeparam>
     /// <param name="services">The DI service collection.</param>
     /// <param name="configuration">
     /// The application configuration. The <c>Atlas:Database</c> section
-    /// (<see cref="AtlasDatabaseOptions.SectionKey"/>) is read to configure the
+    /// (<see cref="KukulcanDatabaseOptions.SectionKey"/>) is read to configure the
     /// provider, connection string, and all options.
     /// </param>
     /// <returns>The <paramref name="services"/> for chaining.</returns>
@@ -46,24 +47,24 @@ public static class ServiceCollectionExtensions
     /// <remarks>
     /// This single call registers:
     /// <list type="bullet">
-    ///   <item><see cref="AtlasDatabaseOptions"/> via <c>IOptions&lt;AtlasDatabaseOptions&gt;</c></item>
+    ///   <item><see cref="KukulcanDatabaseOptions"/> via <c>IOptions&lt;KukulcanDatabaseOptions&gt;</c></item>
     ///   <item><typeparamref name="TContext"/> (scoped)</item>
     ///   <item><see cref="IUnitOfWork"/> → <see cref="UnitOfWork{TContext}"/> (scoped)</item>
     ///   <item><see cref="SlowQueryInterceptor"/> (singleton)</item>
     /// </list>
     /// </remarks>
     public static IServiceCollection AddAtlasDbContext<TContext>(this IServiceCollection services,
-        IConfiguration configuration) where TContext : AtlasDbContextBase
+        IConfiguration configuration) where TContext : KukulcanDbContextBase
     {
         // ① Bind and validate options
-        var section = configuration.GetSection(AtlasDatabaseOptions.SectionKey);
-        services.Configure<AtlasDatabaseOptions>(section);
+        IConfigurationSection section = configuration.GetSection(KukulcanDatabaseOptions.SectionKey);
+        services.Configure<KukulcanDatabaseOptions>(section);
 
-        var opts = section.Get<AtlasDatabaseOptions>() ?? new AtlasDatabaseOptions();
+        KukulcanDatabaseOptions opts = section.Get<KukulcanDatabaseOptions>() ?? new KukulcanDatabaseOptions();
 
         if (string.IsNullOrWhiteSpace(opts.ConnectionString))
             throw new InvalidOperationException(
-                $"Missing required configuration: {AtlasDatabaseOptions.SectionKey}:ConnectionString. " +
+                $"Missing required configuration: {KukulcanDatabaseOptions.SectionKey}:ConnectionString. " +
                 $"Ensure it is set in appsettings.json or environment variables.");
 
         // ② Register the DbContext (scoped — one per HTTP request / unit of work)

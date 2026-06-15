@@ -1,8 +1,8 @@
-using ATLAS.Kernel.Abstractions.Interfaces.Infrastructure;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Infrastructure;
 using MediatR;
 using Spectre.Console;
 
-namespace ATLAS.Kernel.Database.Client.Client;
+namespace KUKULCAN.Kernel.Database.Client.Client;
 
 // ── ICurrentUser ──────────────────────────────────────────────────────────────
 /// <summary>
@@ -75,7 +75,7 @@ public sealed class ConsoleDateTimeProvider : IDateTimeProvider
     public DateTimeOffset UtcNow => _fixedTime ?? DateTimeOffset.UtcNow;
     public DateOnly Today => DateOnly.FromDateTime(UtcNow.UtcDateTime);
     public long UnixTimestampSeconds => UtcNow.ToUnixTimeSeconds();
-    
+
     public void FixTime(DateTimeOffset time) => _fixedTime = time;
     public void UseRealTime() => _fixedTime = null;
 }
@@ -103,5 +103,5 @@ public sealed class ConsoleDomainEventPublisher : IPublisher
 
     public Task Publish<TNotification>(TNotification notification,
         CancellationToken cancellationToken = default) where TNotification : INotification
-        => Publish((object)notification!, cancellationToken);
+        => Publish((object)notification, cancellationToken);
 }

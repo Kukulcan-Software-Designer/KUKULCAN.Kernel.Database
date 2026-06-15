@@ -1,8 +1,8 @@
-# ATLAS.Kernel.Database
+# KUKULKAN.Kernel.Database
 
 ## Overview
 
-`ATLAS.Kernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
+`KUKULCAN.Kernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
 
 This project acts as part of the **Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
 
@@ -33,7 +33,7 @@ It typically sits in the **Shared Kernel layer**, meaning:
 ## Project Structure
 
 ```
-ATLAS.Kernel.Database/
+KUKULCAN.Kernel.Database/
 │
 ├── Source/        # Main source code (currently empty or minimal)
 ├── Tests/         # Unit and integration tests
@@ -61,9 +61,9 @@ Typical components that may be implemented:
 ### 1. Base DbContext
 
 ```csharp
-public abstract class AtlasDbContext : DbContext
+public abstract class KukulcanDbContext : DbContext
 {
-    protected AtlasDbContext(DbContextOptions options) : base(options)
+    protected KukulkanDbContext(DbContextOptions options) : base(options)
     {
     }
 }
@@ -95,7 +95,7 @@ public interface IUnitOfWork
 This library should be referenced by infrastructure layers of other modules:
 
 ```bash
-dotnet add reference ATLAS.Kernel.Database
+dotnet add reference KUKULCAN.Kernel.Database
 ```
 
 Example usage in a module:
@@ -139,7 +139,7 @@ services.AddDbContext<MyModuleDbContext>(options =>
 
 ## License
 
-This project is owned and maintained by **Kratos Software Design** and is distributed under the **General Public License (GPL)**.
+This project is owned and maintained by **Kukulcan Software Design** and is distributed under the **General Public License (GPL)**.
 
 This means the software is free to use, modify, and redistribute, provided that:
 

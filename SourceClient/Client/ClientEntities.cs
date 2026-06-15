@@ -1,8 +1,8 @@
-using ATLAS.Kernel.Abstractions.Interfaces.Domain;
-using ATLAS.Kernel.Domain.Entities;
+using KUKULCAN.Kernel.Abstractions.Interfaces.Domain;
+using KUKULCAN.Kernel.Domain.Entities;
 using MediatR;
 
-namespace ATLAS.Kernel.Database.Client.Client;
+namespace KUKULCAN.Kernel.Database.Client.Client;
 
 // ══════════════════════════════════════════════════════════════════════════════
 // DemoProduct — Demuestra: AuditSaveChangesInterceptor + SoftDeleteInterceptor
