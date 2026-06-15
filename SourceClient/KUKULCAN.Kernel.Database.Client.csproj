@@ -6,32 +6,30 @@
     <LangVersion>latestmajor</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>ATLAS.Kernel.Database.Client</RootNamespace>
-    <AssemblyName>ATLAS.Kernel.Database.Client</AssemblyName>
+    <RootNamespace>KUKULCAN.Kernel.Database.Client</RootNamespace>
+    <AssemblyName>KUKULCAN.Kernel.Database.Client</AssemblyName>
   </PropertyGroup>
 
   <!--
     ── Ruta asumida ──────────────────────────────────────────────────────────────
     La solución tiene esta estructura:
-      ATLAS.Kernel.Database/
+      KUKULCAN.Kernel.Database/
         Source/
-          ATLAS.Kernel.Database/          ← librería
+          KUKULCAN.Kernel.Database/          ← librería
         Sourcxe Client/
-          ATLAS.Kernel.Database.Client/     ← este proyecto
+          KUKULCAN.Kernel.Database.Client/     ← este proyecto
     ─────────────────────────────────────────────────────────────────────────────
   -->
   <ItemGroup>
-    <ProjectReference Include="..\Source\ATLAS.Kernel.Database\ATLAS.Kernel.Database.csproj" />
+    <ProjectReference Include="..\Source\KUKULCAN.Kernel.Database\KUKULCAN.Kernel.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- ── Acceso a las funciones del Nucleo del proyecto ATLAS ────────────── -->
-    <PackageReference Include="ATLAS.Kernel"                                    Version="2.0.3" />
-    
+    <!-- ── Acceso a las funciones del Nucleo KUKULCAN ────────────── -->
+
     <!-- ── Proveedores de BD (los 3 requeridos) ────────────────────────────── -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"         Version="10.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"           Version="10.*" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql"                Version="9.*"  />
 
     <!-- ── EF Core Tools (migraciones) ────────────────────────────────────── -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"             Version="10.*" />
@@ -49,7 +47,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console"            Version="10.*" />
 
     <!-- ── UI de consola ───────────────────────────────────────────────────── -->
-    <PackageReference Include="Spectre.Console"                                 Version="0.49.1" />
+    <PackageReference Include="Spectre.Console" Version="0.55.2" />
   </ItemGroup>
 
   <ItemGroup>

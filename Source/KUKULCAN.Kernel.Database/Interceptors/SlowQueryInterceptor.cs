@@ -1,9 +1,9 @@
+using System.Data.Common;
+using KUKULCAN.Kernel.Database.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ATLAS.Kernel.Database.Configuration;
-using System.Data.Common;
 
-namespace ATLAS.Kernel.Database.Interceptors;
+namespace KUKULCAN.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="DbCommandInterceptor"/> that logs a warning whenever a
@@ -16,7 +16,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 /// (useful during performance profiling sessions).
 /// </para>
 /// <para>
-/// When <see cref="AtlasDatabaseOptions.EnableSensitiveDataLogging"/> is <c>true</c>,
+/// When <see cref="KukulcanDatabaseOptions.EnableSensitiveDataLogging"/> is <c>true</c>,
 /// the SQL text and parameter values are included in the log entry. Always
 /// <c>false</c> in production.
 /// </para>
@@ -31,7 +31,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 /// </code>
 /// </example>
 /// <remarks>Initialises the interceptor with the required services.</remarks>
-public sealed class SlowQueryInterceptor(Logger<SlowQueryInterceptor> logger, IOptions<AtlasDatabaseOptions> options) : DbCommandInterceptor
+public sealed class SlowQueryInterceptor(Logger<SlowQueryInterceptor> logger, IOptions<KukulcanDatabaseOptions> options) : DbCommandInterceptor
 {
     /// <summary>
     /// Commands taking longer than this value (milliseconds) are logged as warnings.
@@ -40,10 +40,10 @@ public sealed class SlowQueryInterceptor(Logger<SlowQueryInterceptor> logger, IO
     public static int SlowQueryThresholdMs { get; set; } = 500;
 
     private readonly ILogger<SlowQueryInterceptor> _logger = logger;
-    private readonly AtlasDatabaseOptions _options = options.Value;
+    private readonly KukulcanDatabaseOptions _options = options.Value;
 
     /// <inheritdoc/>
-    public override System.Data.Common.DbDataReader ReaderExecuted(DbCommand command, 
+    public override System.Data.Common.DbDataReader ReaderExecuted(DbCommand command,
         CommandExecutedEventData eventData, DbDataReader result)
     {
         LogIfSlow(command, eventData.Duration);
@@ -64,7 +64,7 @@ public sealed class SlowQueryInterceptor(Logger<SlowQueryInterceptor> logger, IO
     {
         if (duration.TotalMilliseconds <= SlowQueryThresholdMs) return;
 
-        var sql = _options.EnableSensitiveDataLogging
+        string sql = _options.EnableSensitiveDataLogging
             ? command.CommandText
             : "[SQL hidden — EnableSensitiveDataLogging is false]";
 

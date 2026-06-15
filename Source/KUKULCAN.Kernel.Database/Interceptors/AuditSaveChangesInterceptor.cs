@@ -1,4 +1,6 @@
-namespace ATLAS.Kernel.Database.Interceptors;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace KUKULCAN.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that automatically populates audit
@@ -7,7 +9,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Registered globally by <see cref="AtlasDbContextBase"/>. No per-entity code required.
+/// Registered globally by <see cref="KukulcanDbContextBase"/>. No per-entity code required.
 /// </para>
 /// <para>
 /// <c>CreatedBy</c> / <c>UpdatedBy</c> are populated from <see cref="ICurrentUser"/>.
@@ -15,7 +17,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 /// falls back to <c>"system"</c>.
 /// </para>
 /// </remarks>
-/// <remarks>Initialises the interceptor with the required services.</remarks>
+/// <remarks>Initializes the interceptor with the required services.</remarks>
 public sealed class AuditSaveChangesInterceptor(ICurrentUser currentUser, IDateTimeProvider clock) : SaveChangesInterceptor
 {
 
@@ -41,10 +43,10 @@ public sealed class AuditSaveChangesInterceptor(ICurrentUser currentUser, IDateT
     {
         if (context is null) return;
 
-        var now  = clock.UtcNow;
-        var user = currentUser.IsAuthenticated ? currentUser.UserName : "system";
+        DateTimeOffset now  = clock.UtcNow;
+        string? user = currentUser.IsAuthenticated ? currentUser.UserName : "system";
 
-        foreach (var entry in context.ChangeTracker.Entries<AuditableEntityBase<Guid>>())
+        foreach (EntityEntry<AuditableEntityBase<Guid>> entry in context.ChangeTracker.Entries<AuditableEntityBase<Guid>>())
         {
             switch (entry.State)
             {

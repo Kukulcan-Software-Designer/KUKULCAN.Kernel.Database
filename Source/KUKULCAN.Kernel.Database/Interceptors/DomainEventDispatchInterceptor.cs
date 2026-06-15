@@ -1,4 +1,4 @@
-namespace ATLAS.Kernel.Database.Interceptors;
+namespace KUKULCAN.Kernel.Database.Interceptors;
 
 /// <summary>
 /// EF Core <see cref="SaveChangesInterceptor"/> that dispatches all pending
@@ -16,7 +16,7 @@ namespace ATLAS.Kernel.Database.Interceptors;
 /// if a handler triggers another <c>SaveChanges</c> within the same scope.
 /// </para>
 /// </remarks>
-/// <remarks>Initialises the interceptor with the MediatR publisher.</remarks>
+/// <remarks>Initializes the interceptor with the MediatR publisher.</remarks>
 public sealed class DomainEventDispatchInterceptor(IPublisher publisher) : SaveChangesInterceptor
 {
 

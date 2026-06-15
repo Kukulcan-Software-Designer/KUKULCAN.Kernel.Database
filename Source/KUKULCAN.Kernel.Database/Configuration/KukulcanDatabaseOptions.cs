@@ -1,7 +1,7 @@
-namespace ATLAS.Kernel.Database.Configuration;
+namespace KUKULCAN.Kernel.Database.Configuration;
 
 /// <summary>
-/// Strongly-typed configuration options for ATLAS database connections.
+/// Strongly-typed configuration options for KUKULCAN database connections.
 /// Bound to the <c>Atlas:Database</c> section in <c>appsettings.json</c>.
 /// </summary>
 /// <remarks>
@@ -28,10 +28,10 @@ namespace ATLAS.Kernel.Database.Configuration;
 /// }
 /// </code>
 /// </example>
-public sealed class AtlasDatabaseOptions
+public sealed class KukulcanDatabaseOptions
 {
-    /// <summary>Configuration section key: <c>"Atlas:Database"</c>.</summary>
-    public const string SectionKey = "Atlas:Database";
+    /// <summary>Configuration section key: <c>"Kukulcan:Database"</c>.</summary>
+    public const string SectionKey = "Kukulcan:Database";
 
     /// <summary>Gets or sets the database engine provider. Default: <see cref="DatabaseProvider.SqlServer"/>.</summary>
     public DatabaseProvider Provider { get; set; } = DatabaseProvider.SqlServer;
