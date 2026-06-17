@@ -2,8 +2,7 @@
 
 ## Overview
 
-`KUKULCAN.Kernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the ATLAS ERP ecosystem.
-
+`KUKULCAN.Kernel.Database` is a foundational library designed to provide shared database abstractions and infrastructure components across the **Kukulcán Software Designer** application ecosystem.
 This project acts as part of the **Kernel**, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
 
 ## Purpose
@@ -151,4 +150,4 @@ For full license terms, see the `LICENSE` file included in this repository.
 
 ## Notes
 
-This library is currently in an early stage and may evolve as the Atlas ecosystem grows.
+This library is currently in an initial phase and may evolve as the **Kukulcán Software Designer** application ecosystem grows.

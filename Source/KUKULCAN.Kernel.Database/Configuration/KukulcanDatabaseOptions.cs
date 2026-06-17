@@ -2,7 +2,7 @@ namespace KUKULCAN.Kernel.Database.Configuration;
 
 /// <summary>
 /// Strongly-typed configuration options for KUKULCAN database connections.
-/// Bound to the <c>Atlas:Database</c> section in <c>appsettings.json</c>.
+/// Bound to the <c>Kukulcan:Database</c> section in <c>appsettings.json</c>.
 /// </summary>
 /// <remarks>
 /// All modules in a single deployment share the same provider and connection string
@@ -13,10 +13,10 @@ namespace KUKULCAN.Kernel.Database.Configuration;
 /// <code>
 /// // appsettings.json
 /// {
-///   "Atlas": {
+///   "Kukulcan": {
 ///     "Database": {
 ///       "Provider":              "PostgreSql",
-///       "ConnectionString":      "Host=localhost;Database=atlas;Username=atlas;Password=atlas_pass;",
+///       "ConnectionString":      "Host=localhost;Database=Kukulcan;Username=Kukulcan;Password=Kukulcan_pass;",
 ///       "CommandTimeoutSeconds": 30,
 ///       "EnableSensitiveDataLogging": false,
 ///       "EnableDetailedErrors":  false,

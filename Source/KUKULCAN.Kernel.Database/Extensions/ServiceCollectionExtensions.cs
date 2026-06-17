@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace KUKULCAN.Kernel.Database.Extensions;
 
 /// <summary>
-/// Extension methods for <see cref="IServiceCollection"/> that register an ATLAS
+/// Extension methods for <see cref="IServiceCollection"/> that register an KUKULCAN
 /// module's DbContext together with all required infrastructure services.
 /// </summary>
 /// <example>
@@ -18,7 +18,7 @@ namespace KUKULCAN.Kernel.Database.Extensions;
 ///     this IServiceCollection services,
 ///     IConfiguration          configuration)
 /// {
-///     services.AddAtlasDbContext&lt;CrmDbContext&gt;(configuration);
+///     services.AddKukulcanDbContext&lt;CrmDbContext&gt;(configuration);
 ///     services.AddScoped&lt;ICustomerRepository, CustomerRepository&gt;();
 ///     return services;
 /// }
@@ -36,13 +36,13 @@ public static class ServiceCollectionExtensions
     /// </typeparam>
     /// <param name="services">The DI service collection.</param>
     /// <param name="configuration">
-    /// The application configuration. The <c>Atlas:Database</c> section
+    /// The application configuration. The <c>Kukulcan:Database</c> section
     /// (<see cref="KukulcanDatabaseOptions.SectionKey"/>) is read to configure the
     /// provider, connection string, and all options.
     /// </param>
     /// <returns>The <paramref name="services"/> for chaining.</returns>
     /// <exception cref="InvalidOperationException">
-    /// Thrown when <c>Atlas:Database:ConnectionString</c> is missing or empty.
+    /// Thrown when <c>Kukulcan:Database:ConnectionString</c> is missing or empty.
     /// </exception>
     /// <remarks>
     /// This single call registers:
@@ -53,7 +53,7 @@ public static class ServiceCollectionExtensions
     ///   <item><see cref="SlowQueryInterceptor"/> (singleton)</item>
     /// </list>
     /// </remarks>
-    public static IServiceCollection AddAtlasDbContext<TContext>(this IServiceCollection services,
+    public static IServiceCollection AddKukulcanDbContext<TContext>(this IServiceCollection services,
         IConfiguration configuration) where TContext : KukulcanDbContextBase
     {
         // ① Bind and validate options

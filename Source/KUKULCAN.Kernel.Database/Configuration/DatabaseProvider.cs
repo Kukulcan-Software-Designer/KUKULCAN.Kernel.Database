@@ -2,7 +2,7 @@ namespace KUKULCAN.Kernel.Database.Configuration;
 
 /// <summary>
 /// Identifies the relational database engine used by an KUKULCAN module's DbContext.
-/// The provider is configured via the <c>Atlas:Database:Provider</c> key in
+/// The provider is configured via the <c>Kukulcan:Database:Provider</c> key in
 /// <c>appsettings.json</c> and read by <see cref="KukulcanDatabaseOptions"/>.
 /// </summary>
 /// <remarks>
@@ -17,7 +17,7 @@ namespace KUKULCAN.Kernel.Database.Configuration;
 /// <code>
 /// // appsettings.json
 /// {
-///   "Atlas": {
+///   "Kukulkan": {
 ///     "Database": { "Provider": "PostgreSql" }
 ///   }
 /// }

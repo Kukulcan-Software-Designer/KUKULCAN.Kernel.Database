@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace KUKULCAN.Kernel.Database.Extensions;
 
 /// <summary>
-/// Extension methods for <see cref="ModelBuilder"/> that apply ATLAS global
-/// query filters and conventions during <c>OnModelCreating</c>.
+/// Extension methods for <see cref="ModelBuilder"/> that apply global query filters
+/// and conventions from KUKULCAN.Kernel.Database during <c>OnModelCreating</c>.
 /// Called automatically by <see cref="KukulcanDbContextBase"/>.
 /// </summary>
 public static class ModelBuilderExtensions

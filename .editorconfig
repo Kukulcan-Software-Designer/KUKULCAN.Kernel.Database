@@ -15,7 +15,7 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 [*.cs]
-# Naming conventions (aligned with ATLAS C# standards)
+# Naming conventions (aligned with KUKULCAN C# standards)
 dotnet_naming_rule.private_fields_underscore.symbols  = private_fields
 dotnet_naming_rule.private_fields_underscore.style    = underscore_prefix
 dotnet_naming_rule.private_fields_underscore.severity = warning

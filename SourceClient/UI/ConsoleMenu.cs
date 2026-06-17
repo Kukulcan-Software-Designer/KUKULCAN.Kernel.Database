@@ -8,7 +8,7 @@ using Spectre.Console;
 namespace KUKULCAN.Kernel.Database.Client.UI;
 
 /// <summary>
-/// Menú interactivo que demuestra cada característica de ATLAS.Kernel.Database.
+/// Interactive menu that demonstrates each feature of KUKULCAN.Kernel.Database.
 /// </summary>
 public sealed class ConsoleMenu(ClientDbContext db, UnitOfWork<ClientDbContext> uow, ConsoleCurrentUser currentUser,
     ConsoleTenantContext tenantContext, ConsoleDateTimeProvider clock, KukulcanDatabaseOptions opts)
@@ -462,7 +462,7 @@ public sealed class ConsoleMenu(ClientDbContext db, UnitOfWork<ClientDbContext> 
 
     private void PrintBanner()
     {
-        AnsiConsole.Write(new Rule("[bold blue]ATLAS.Kernel.Database — Demo interactiva[/]").RuleStyle(Style.Parse("blue")));
+        AnsiConsole.Write(new Rule("[bold blue]KUKULCAN.Kernel.Database — Demo interactiva[/]").RuleStyle(Style.Parse("blue")));
 
         var providerColor = opts.Provider switch
         {
