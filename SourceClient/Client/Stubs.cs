@@ -13,7 +13,7 @@ public sealed class ConsoleCurrentUser : ICurrentUser
     public bool IsAuthenticated { get; private set; } = true;
     public string UserName { get; private set; } = "demo-user";
     public Guid UserId { get; private set; } = Guid.NewGuid();
-    public string Email { get; private set; } = "demo@atlas.local";
+    public string Email { get; private set; } = "demo@kukulcan.local";
     public IReadOnlyList<string> Roles { get; private set; } = ["Admin"];
     public Guid TenantId { get; private set; } = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000001");
 
@@ -21,7 +21,7 @@ public sealed class ConsoleCurrentUser : ICurrentUser
 
     public bool IsInAllRoles(params string[] roles) => IsAuthenticated && roles.All(r => Roles.Contains(r, StringComparer.OrdinalIgnoreCase));
 
-    public void SetUser(string userName, Guid userId, string email = "demo@atlas.local", IReadOnlyList<string>? roles = null, Guid? tenantId = null)
+    public void SetUser(string userName, Guid userId, string email = "demo@kukulcan.local", IReadOnlyList<string>? roles = null, Guid? tenantId = null)
     {
         IsAuthenticated = true;
         UserName        = userName;

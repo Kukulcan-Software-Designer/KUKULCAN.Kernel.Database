@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace KUKULCAN.Kernel.Database;
 
 /// <summary>
-/// Abstract base class for all ATLAS module DbContexts.
+/// Abstract base class for all KUKULCAN.Kernel.Database module DbContexts.
 /// Centralizes every cross-cutting persistence concern so that individual module
 /// DbContexts only need to declare their own <c>DbSet&lt;T&gt;</c> properties and
 /// set their schema in <c>OnModelCreating</c>.
