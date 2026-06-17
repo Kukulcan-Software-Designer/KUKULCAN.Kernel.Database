@@ -7,13 +7,13 @@
         <Authors>Kukulcan Software Designer</Authors>
         <Company>Kukulcan Software Designer</Company>
         <Copyright>GPL 2026 Kukulcan Software Designer</Copyright>
-        <PackageProjectUrl>https://www.kukulcan.mx/Sooftware/KernelDatabase</PackageProjectUrl>
+        <PackageProjectUrl>https://www.kukulcan.mx/Software/KernelDatabase</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageOutputPath>$(SolutionDir)NuGet\</PackageOutputPath>
-        <PackageTags>erp;ddd;kernel;database;efcore;infrastructure</PackageTags>
+        <PackageTags>kukulcan;kernel;efcore;infrastructure</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <RepositoryUrl>https://github.com/KUKULCAN-DEV/KUKULCAN.Kernel</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Kukulcan-Software-Designer/KUKULCAN.Kernel.Database</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <Description>KUKULCAN.Kernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the entire "Kukulcan Software Designer" application ecosystem.
 This project acts as part of the Kernel, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
