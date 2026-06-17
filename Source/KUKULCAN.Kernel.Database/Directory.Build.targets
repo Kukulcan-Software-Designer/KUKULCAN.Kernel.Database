@@ -4,13 +4,13 @@
         <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
         <PackageId>$(AssemblyName)</PackageId>
         <Version>$(VersionPrefix)</Version>
-        <Authors>KUKULCAN Design Systems</Authors>
-        <Company>KUKULCAN Design Systems</Company>
-        <Copyright>GPL 2026 KUKULCAN Software Design</Copyright>
-        <PackageProjectUrl>https://www.kukulcan.mx/ATLAS</PackageProjectUrl>
+        <Authors>Kukulcan Software Designer</Authors>
+        <Company>Kukulcan Software Designer</Company>
+        <Copyright>GPL 2026 Kukulcan Software Designer</Copyright>
+        <PackageProjectUrl>https://www.kukulcan.mx/Sooftware/KernelDatabase</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageOutputPath>$(SolutionDir)NuGet\</PackageOutputPath>
-        <PackageTags>atlas;erp;ddd;kernel;database;efcore;infrastructure</PackageTags>
+        <PackageTags>erp;ddd;kernel;database;efcore;infrastructure</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/KUKULCAN-DEV/KUKULCAN.Kernel</RepositoryUrl>

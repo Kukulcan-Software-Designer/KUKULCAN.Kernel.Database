@@ -8,7 +8,7 @@ namespace KUKULCAN.Kernel.Database.UnitOfWork;
 /// Generic implementation of <see cref="IUnitOfWork"/> backed by a specific
 /// <typeparamref name="TContext"/> (a module's <see cref="KukulcanDbContextBase"/>).
 /// Registered automatically by
-/// <see cref="ServiceCollectionExtensions.AddAtlasDbContext{TContext}"/>.
+/// <see cref="ServiceCollectionExtensions.AddKukulcanDbContext{TContext}"/>.
 /// </summary>
 /// <typeparam name="TContext">
 /// The module's specific DbContext type, e.g. <c>CrmDbContext</c>, <c>I18nDbContext</c>.

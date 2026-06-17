@@ -25,7 +25,7 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 
 // ── Selección de proveedor ─────────────────────────────────────────────────────
 AnsiConsole.Clear();
-AnsiConsole.Write(new Rule("[bold blue]ATLAS.Kernel.Database — Demo[/]").RuleStyle(Style.Parse("blue")));
+AnsiConsole.Write(new Rule("[bold blue]KUKULCAN.Kernel.Database — Demo[/]").RuleStyle(Style.Parse("blue")));
 
 string providerChoice = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
@@ -61,7 +61,7 @@ var services = new ServiceCollection();
 services.AddSingleton(loggerFactory);
 services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-// KukulkanDatabaseOptions — se construye a partir de la sección Atlas:Database
+// KukulkanDatabaseOptions — se construye a partir de la sección Kukulcan:Database
 // y se sobreescribe Provider y ConnectionString con la selección del usuario
 services.Configure<KukulcanDatabaseOptions>(opts =>
 {

@@ -1,26 +1,26 @@
 <Solution>
   <!--
     KUKULCAN.Kernel.Database
-    Librería de infraestructura de base de datos para ATLAS ERP.
+    Database infrastructure library for Kukulcán Software Designer applications.
 
     Provee:
-      - KukulkanDbContextBase		→ base para todos los DbContext de módulo
-      - AddAtlasDbContext<T>()		→ extensión DI que registra DbContext + IUnitOfWork + SlowQueryInterceptor
-      - UnitOfWork<TContext>		→ implementación de IUnitOfWork
+      - KukulkanDbContextBase		→ base for all module DbContexts
+      - AddKukulcanDbContext<T>()	→ DI extension that logs DbContext + IUnitOfWork + SlowQueryInterceptor
+      - UnitOfWork<TContext>		→ IUnitOfWork implementation
       - 5 interceptores EF Core		→ AuditSaveChanges, SoftDelete, DomainEventDispatch,
 										ImmutableEntity, SlowQuery
       - ModelBuilderExtensions		→ ApplySoftDeleteFilter, ApplyTenantFilter
-      - KukulkanDatabaseOptions		→ configuración multi-proveedor
-      - DatabaseProvider			→ enum: SqlServer, PostgreSql, MySql, Oracle, Sqlite
+      - KukulkanDatabaseOptions		→ multi-vendor configuration
+      - DatabaseProvider			→ enum: SqlServer, PostgreSql
 
-    Formato: .slnx (XML, .NET 9+ / Visual Studio 2022 17.12+)
+    Format: .slnx (XML, .NET 9+ / Visual Studio 2022 17.12+)
 
-    Árbol de dependencias de la solución:
+    Solution dependency tree:
       KUKULKAN.Kernel.Abstractions
               ↑
       KUKULKAN.Kernel.Domain
               ↑
-      KUKULKAN.Kernel.Database     ← proyecto principal de esta solución
+      KUKULKAN.Kernel.Database     ← main project of this solution
   -->
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
