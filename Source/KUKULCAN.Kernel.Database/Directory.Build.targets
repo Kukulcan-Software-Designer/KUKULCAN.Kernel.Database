@@ -13,6 +13,12 @@
         <PackageTags>kukulcan;kernel;efcore;infrastructure</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>This revision corrects the following:
+
+            - Spelling errors related to the URL where the class library is located.
+            - Spelling errors in the organization name.
+            - The reference to KUKULCAN.Kernel has been updated to the latest version.
+        </PackageReleaseNotes>
         <RepositoryUrl>https://github.com/Kukulcan-Software-Designer/KUKULCAN.Kernel.Database</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <Description>KUKULCAN.Kernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the entire "Kukulcan Software Designer" application ecosystem.
