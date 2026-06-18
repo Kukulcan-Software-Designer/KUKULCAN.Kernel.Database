@@ -4,10 +4,10 @@
         <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
         <PackageId>$(AssemblyName)</PackageId>
         <Version>$(VersionPrefix)</Version>
-        <Authors>Kukulcan Software Designer</Authors>
-        <Company>Kukulcan Software Designer</Company>
-        <Copyright>GPL 2026 Kukulcan Software Designer</Copyright>
-        <PackageProjectUrl>https://www.kukulcan.mx/Software/KernelDatabase</PackageProjectUrl>
+        <Authors>Kukulcán Software Designer</Authors>
+        <Company>Kukulcán Software Designer</Company>
+        <Copyright>GPL 2026 Kukulcán Software Designer</Copyright>
+        <PackageProjectUrl>https://www.kukulcan.org.mx/Software/KernelDatabase</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageOutputPath>$(SolutionDir)NuGet\</PackageOutputPath>
         <PackageTags>kukulcan;kernel;efcore;infrastructure</PackageTags>
@@ -22,7 +22,7 @@
         </PackageReleaseNotes>
         <RepositoryUrl>https://github.com/Kukulcan-Software-Designer/KUKULCAN.Kernel.Database</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <Description>KUKULCAN.Kernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the entire "Kukulcan Software Designer" application ecosystem.
+        <Description>KUKULCAN.Kernel.Database is a foundational library designed to provide shared database abstractions and infrastructure components across the entire "Kukulcán Software Designer" application ecosystem.
 This project acts as part of the Kernel, enabling consistency, reuse, and standardization of database-related concerns across multiple modules and bounded contexts.
         </Description>
     </PropertyGroup>
