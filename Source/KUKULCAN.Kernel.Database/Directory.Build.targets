@@ -13,7 +13,8 @@
         <PackageTags>kukulcan;kernel;efcore;infrastructure</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <PackageReleaseNotes>This revision corrects the following:
+        <PackageReleaseNotes>
+            This revision corrects the following:
 
             - Spelling errors related to the URL where the class library is located.
             - Spelling errors in the organization name.
