@@ -1,4 +1,4 @@
-# KUKULKAN.Kernel.Database
+# KUKULCAN.Kernel.Database
 
 ## Overview
 
@@ -34,9 +34,10 @@ It typically sits in the **Shared Kernel layer**, meaning:
 ```
 KUKULCAN.Kernel.Database/
 │
-├── Source/        # Main source code (currently empty or minimal)
-├── Tests/         # Unit and integration tests
-├── Documents/     # Supporting documentation
+├── Source/             # Main source code 
+├── Source Client/      # Client source code example of use 
+├── Tests/              # Unit and integration tests
+├── Solution Items/     # Solution configuration files, editing, and GitHub
 ├── Directory.Build.props
 └── Solution file
 ```
@@ -138,7 +139,7 @@ services.AddDbContext<MyModuleDbContext>(options =>
 
 ## License
 
-This project is owned and maintained by **Kukulcan Software Design** and is distributed under the **General Public License (GPL)**.
+This project is owned and maintained by **Kukulcán Software Designer** and is distributed under the **General Public License (GPL)**.
 
 This means the software is free to use, modify, and redistribute, provided that:
 
